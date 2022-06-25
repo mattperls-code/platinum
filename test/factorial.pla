@@ -1,0 +1,23 @@
+/*
+    Factorial
+
+    Demonstrates:
+
+        functions
+        recursion
+        chained conditionals
+        return statements
+        binary operations
+*/
+
+factorial = $(index, product) => {
+    if(product == void){
+        return factorial(index, 1);
+    } else if(index > 1) {
+        return factorial(index - 1, product * index);
+    } else {
+        return product;
+    };
+};
+
+outWrite(factorial(5));

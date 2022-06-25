@@ -1,0 +1,21 @@
+/*
+    Sum First N
+
+    Demonstrates:
+
+        functions
+        for loops
+        standard and postfix mutators
+        return statements
+        binary operations
+*/
+
+sumFirstN = $(n) =>{
+    sum = 0;
+    for(i = 1;i<=n;i++){
+        sum += i;
+    };
+    return sum;
+};
+
+outWrite(sumFirstN(10));

@@ -1,0 +1,27 @@
+/*
+    Fizz Buzz
+
+    Demonstrates:
+
+        functions
+        for loops
+        chained conditionals
+        standard and postfix mutators
+        binary operations
+*/
+
+fizzBuzz = $(n) => {
+    for(i = 0;i<n;i++){
+        isDivisibleBy3 = i % 3 == 0;
+        isDivisibleBy5 = i % 5 == 0;
+        if(isDivisibleBy3 && isDivisibleBy5){
+            outWrite("Fizz Buzz");
+        } else if(isDivisibleBy3){
+            outWrite("Fizz");
+        } else if(isDivisibleBy5){
+            outWrite("Buzz");
+        };
+    };
+};
+
+fizzBuzz(50);
