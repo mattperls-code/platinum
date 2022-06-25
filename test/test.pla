@@ -1,5 +1,5 @@
 io = importLibrary("io");
 
-importModule("test/test.pla");
+importModule("test/factorial.pla");
 
 io.log(factorial(5));
