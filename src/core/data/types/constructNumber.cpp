@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "../value.hpp"
 
 namespace Platinum

@@ -15,13 +15,11 @@ fizzBuzz = $(n) => {
         isDivisibleBy3 = i % 3 == 0;
         isDivisibleBy5 = i % 5 == 0;
         if(isDivisibleBy3 && isDivisibleBy5){
-            outWrite("Fizz Buzz");
+            io.log(i, "Fizz Buzz");
         } else if(isDivisibleBy3){
-            outWrite("Fizz");
+            io.log(i, "Fizz");
         } else if(isDivisibleBy5){
-            outWrite("Buzz");
+            io.log(i, "Buzz");
         };
     };
 };
-
-fizzBuzz(50);

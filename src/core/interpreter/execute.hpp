@@ -16,6 +16,8 @@ namespace Platinum
     namespace Interpreter
     {
         void execute(vector<string> args);
+        void executeFile(string path);
+        void executeFile(string path, shared_ptr<Context> context);
 
         StatementResolution executeOnContext(shared_ptr<Context> context, AST::ParsedCode blocks);
         StatementResolution executeOnContext(shared_ptr<Context> context, AST::TrackedCode code);

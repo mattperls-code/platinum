@@ -19,5 +19,3 @@ factorial = $(index, product) => {
         return product;
     };
 };
-
-outWrite(factorial(5));

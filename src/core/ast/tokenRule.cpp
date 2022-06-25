@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "tokenRule.hpp"
 
 namespace Platinum
@@ -278,7 +280,9 @@ namespace Platinum
             if(currentSequence.set.size() >= 2){
                 if((currentSequence.set[currentSequence.set.size() - 2].c == '<' || currentSequence.set[currentSequence.set.size() - 2].c == '>') && currentSequence.set.back().c != '='){
                     currentSequence.set.pop_back();
-                    return Token("binary2", currentSequence, 1);
+                    Token matchTest = TokenRule("binary2", false).match(currentSequence);
+                    matchTest.decrement = 1;
+                    return matchTest;
                 };
             };
             return Token();

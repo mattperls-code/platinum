@@ -17,5 +17,3 @@ sumFirstN = $(n) =>{
     };
     return sum;
 };
-
-outWrite(sumFirstN(10));

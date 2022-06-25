@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "tokenRule.hpp"
 #include "block.hpp"

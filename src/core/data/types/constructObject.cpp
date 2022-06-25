@@ -36,7 +36,23 @@ namespace Platinum
             }));
 
             this->implicitToString = Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
-                return makeValue((string) "object{" + to_string(boundRef->getPrimitiveObject(context).size()) + "}");
+                unordered_map<string, Value> object = boundRef->getPrimitiveObject(context);
+
+                if(object.size() == 0){
+                    return makeValue((string) "{}");
+                } else {
+                    string concat;
+
+                    for(auto it : object)
+                    {
+                        concat += it.first + " : " + it.second->implicitToString(context)->getPrimitiveString(context) + ", ";
+                    };
+
+                    concat.pop_back();
+                    concat.pop_back();
+
+                    return makeValue("{ " + concat + " }");
+                };
             }));
         };
     };

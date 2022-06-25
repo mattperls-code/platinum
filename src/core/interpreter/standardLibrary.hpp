@@ -10,6 +10,16 @@ using namespace std;
 
 namespace Platinum
 {
+    namespace Modules
+    {
+        Data::Value types();
+        Data::Value io();
+        Data::Value math();
+        Data::Value fs();
+        Data::Value network();
+        Data::Value eval();
+    };
+
     namespace Interpreter
     {
         unordered_map<string, Data::Value> standardLibrary();

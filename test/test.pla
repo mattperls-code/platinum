@@ -1,0 +1,5 @@
+io = importLibrary("io");
+
+importModule("test/test.pla");
+
+io.log(factorial(5));

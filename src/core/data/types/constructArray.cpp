@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "../value.hpp"
 
 namespace Platinum
@@ -45,9 +47,51 @@ namespace Platinum
             }));
 
             this->implicitToString = Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
-                // TODO: implement this properly
-                return makeValue((string) "array[" + to_string(boundRef->getPrimitiveArray(context).size()) + "]");
+                vector<Value> array = boundRef->getPrimitiveArray(context);
+                if(array.size() == 0){
+                    return makeValue((string) "[]");
+                } else if(array.size() == 1){
+                    return makeValue("[ " + array[0]->implicitToString(context)->getPrimitiveString(context) + "] ");
+                } else {
+                    string concat;
+                    for(int i = 0;i<array.size() - 1;i++)
+                    {
+                        concat += array[i]->implicitToString(context)->getPrimitiveString(context) + ", ";
+                    };
+                    concat += array.back()->implicitToString(context)->getPrimitiveString(context);
+                    return makeValue("[ " + concat + " ]");
+                };
             }));
+
+            this->members["length"] = makeValue(Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
+                return makeValue((float) boundRef->getPrimitiveArray(context).size());
+            })));
+
+            this->members["pushBack"] = makeValue(Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
+                for(int i = 0;i<args.size();i++)
+                {
+                    get<vector<Value>>(boundRef->primitive).push_back(args[i]);
+                };
+                return makeValue();
+            })));
+
+            this->members["popBack"] = makeValue(Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
+                get<vector<Value>>(boundRef->primitive).pop_back();
+                return makeValue();
+            })));
+
+            this->members["forEach"] = makeValue(Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
+                vector<Value> array = boundRef->getPrimitiveArray(context);
+
+                Function callback = args[0]->getPrimitiveFunction(context);
+                
+                for(int i = 0;i<array.size();i++)
+                {
+                    callback(context, vector<Value>{ array[i], makeValue((float) i) });
+                };
+
+                return makeValue();
+            })));
         };
     };
 };

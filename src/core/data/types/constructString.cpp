@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "../value.hpp"
 
 namespace Platinum
@@ -72,8 +74,68 @@ namespace Platinum
             }));
 
             this->implicitToString = Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
-                return makeValue(boundRef->getPrimitiveString(context));
+                return makeValue("\"" + boundRef->getPrimitiveString(context) + "\"");
             }));
+
+            this->members["length"] = makeValue(Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
+                return makeValue((float) boundRef->getPrimitiveString(context).size());
+            })));
+
+            // TODO: negative indices for get/set/delete char
+
+            this->members["getChar"] = makeValue(Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
+                float arg = args[0]->getPrimitiveNumber(context);
+                int index = roundf(arg);
+
+                if(fabs(index - arg) < 0.00001 && arg >= 0){
+                    if(index < boundRef->getPrimitiveString(context).size()){
+                        return makeValue((string) { boundRef->getPrimitiveString(context)[index] });
+                    } else {
+                        context->throwError(Interpreter::Context::ErrorTypes::CONTEXTUAL, "Attempted out of bounds access of string");
+                    };
+                } else {
+                    context->throwError(Interpreter::Context::ErrorTypes::CONTEXTUAL, "Arg must be a non negative integer");
+                };
+            })));
+
+            this->members["setChar"] = makeValue(Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
+                float arg1 = args[0]->getPrimitiveNumber(context);
+                int index = roundf(arg1);
+
+                if(fabs(index - arg1) < 0.00001 && arg1 >= 0){
+                    if(index < boundRef->getPrimitiveString(context).size()){
+                        string arg2 = args[1]->getPrimitiveString(context);
+                        if(arg2.size() >= 1){
+                            get<string>(boundRef->primitive)[index] = arg2[0];
+                            return makeValue();
+                        } else {
+                            context->throwError(Interpreter::Context::ErrorTypes::CONTEXTUAL, "Expected non empty string");
+                        };
+                    } else {
+                        context->throwError(Interpreter::Context::ErrorTypes::CONTEXTUAL, "Attempted out of bounds access of string");
+                    };
+                } else {
+                    context->throwError(Interpreter::Context::ErrorTypes::CONTEXTUAL, "Arg must be a non negative integer");
+                };
+            })));
+
+            this->members["deleteChar"] = makeValue(Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
+                float arg1 = args[0]->getPrimitiveNumber(context);
+                int index = roundf(arg1);
+
+                if(fabs(index - arg1) < 0.00001 && arg1 >= 0){
+                    if(index < boundRef->getPrimitiveString(context).size()){
+                        get<string>(boundRef->primitive).erase(get<string>(boundRef->primitive).begin() + index);
+                        return makeValue();
+                    } else {
+                        context->throwError(Interpreter::Context::ErrorTypes::CONTEXTUAL, "Attempted out of bounds access of string");
+                    };
+                } else {
+                    context->throwError(Interpreter::Context::ErrorTypes::CONTEXTUAL, "Arg must be a non negative integer");
+                };
+            })));
+
+            // TODO (as members or maybe as part of stl): substr, slice, reverse, trimFront, trimBack, padFront, padBack, startsWith, endsWith, replaceFirst, replaceAll, hasSubstr, split
         };
     };
 };

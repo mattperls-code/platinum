@@ -11,7 +11,7 @@ namespace Platinum
         StatementResolution::StatementResolution()
         {
             this->didReturn = false;
-            this->returnValue = Data::Value();
+            this->returnValue = Data::makeValue();
         };
 
         StatementResolution::StatementResolution(Data::Value returnValue)

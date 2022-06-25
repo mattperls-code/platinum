@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 #include "context.hpp"
 #include "standardLibrary.hpp"
@@ -37,7 +38,7 @@ namespace Platinum
 
         double Context::getExecutionTime()
         {
-            auto now = chrono::high_resolution_clock::now();
+            auto now = chrono::steady_clock::now();
             if(this->hasParent){
                 return this->parent->getExecutionTime();
             } else {
@@ -74,9 +75,8 @@ namespace Platinum
             } else if(this->hasParent && this->parent->hasVariable(name)){
                 return this->parent->getVariable(name);
             } else {
-                Data::Value value = Data::makeValue();
-                this->variables.insert_or_assign(name, value);
-                return value;
+                this->variables[name] = Data::makeValue();
+                return this->variables[name];
             };
         };
 
@@ -91,7 +91,7 @@ namespace Platinum
             if(this->hasParent){
                 for(auto it : this->variables)
                 {
-                    this->parent->variables.insert_or_assign(it.first, it.second);
+                    this->parent->variables[it.first] = it.second;
                 };
             };
         };

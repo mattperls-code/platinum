@@ -1,6 +1,6 @@
-#include <sstream>
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 
 #include "evaluate.hpp"
 #include "execute.hpp"
@@ -11,10 +11,19 @@ namespace Platinum
     {
         void execute(vector<string> args)
         {
-            shared_ptr<Context> context = make_shared<Context>("ROOT", 0, 0);
-            ifstream runTarget(args[1]);
+            executeFile(args[1]);
+        };
+
+        void executeFile(string path)
+        {
+            return executeFile(path, make_shared<Context>("ROOT", 0, 0));
+        };
+
+        void executeFile(string path, shared_ptr<Context> context)
+        {
+            ifstream runTarget(path);
             if(runTarget.fail()){
-                context->throwError(Context::ErrorTypes::FILE, "File \"" + args[1] + "\" was unable to be read");
+                context->throwError(Context::ErrorTypes::FILE, "File \"" + path + "\" was unable to be read");
             };
             string untrackedCode;
             string line;

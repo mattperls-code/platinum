@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <functional>
 #include <variant>
 #include <memory>
 
@@ -39,15 +40,15 @@ namespace Platinum
                 NativeFunction(function<Value(shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef)> implementation);
         };
 
-        // TODO: closures by storing the definition declaration context and running on that rather than current call context
         class DynamicFunction
         {
             public:
+                shared_ptr<Interpreter::Context> declarationContext;
                 vector<string> argNames;
                 AST::ParsedCode implementation;
 
                 DynamicFunction();
-                DynamicFunction(vector<string> argNames, AST::ParsedCode implementation);
+                DynamicFunction(shared_ptr<Interpreter::Context> declarationContext, vector<string> argNames, AST::ParsedCode implementation);
         };
         
         class Function

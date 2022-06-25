@@ -374,7 +374,7 @@ namespace Platinum
                 argNames.push_back(currentArg);
             }
 
-            return Data::makeValue(Data::Function(Data::makeValue(), Data::DynamicFunction(argNames, AST::Parser::createExecutionBlocks(context, callback.slice(1, callback.set.size() - 1)))));
+            return Data::makeValue(Data::Function(Data::makeValue(), Data::DynamicFunction(context, argNames, AST::Parser::createExecutionBlocks(context, callback.slice(1, callback.set.size() - 1)))));
         };
 
         Data::Value evaluateUnaryOperation(shared_ptr<Context> context, Data::Value operand, AST::TrackedCode operation)
@@ -430,7 +430,9 @@ namespace Platinum
             };
             args.push_back(evaluateBlocks(context, currentArgBlocks));
 
-            return function->call(context, args);
+            Data::Value returnValue = function->call(context, args);
+
+            return returnValue;
         };
     };
 };

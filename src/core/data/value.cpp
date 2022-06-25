@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "value.hpp"
 #include "../interpreter/execute.hpp"
 
@@ -12,8 +14,9 @@ namespace Platinum
         };
 
         DynamicFunction::DynamicFunction(){};
-        DynamicFunction::DynamicFunction(vector<string> argNames, AST::ParsedCode implementation)
+        DynamicFunction::DynamicFunction(shared_ptr<Interpreter::Context> declarationContext, vector<string> argNames, AST::ParsedCode implementation)
         {
+            this->declarationContext = declarationContext;
             this->argNames = argNames;
             this->implementation = implementation;
         };
@@ -45,7 +48,7 @@ namespace Platinum
             } else {
                 DynamicFunction functionDefinition = get<DynamicFunction>(this->definition);
 
-                shared_ptr<Interpreter::Context> executionContext = context->createChild("EXECUTION", functionDefinition.implementation[0].sequence[0].sequence.set[0].line, functionDefinition.implementation[0].sequence[0].sequence.set[0].pos);
+                shared_ptr<Interpreter::Context> executionContext = functionDefinition.declarationContext->createChild("EXECUTION", functionDefinition.implementation[0].sequence[0].sequence.set[0].line, functionDefinition.implementation[0].sequence[0].sequence.set[0].pos);
 
                 executionContext->overwriteVariable("this", this->boundRef);
 
@@ -60,7 +63,7 @@ namespace Platinum
             } else {
                 DynamicFunction functionDefinition = get<DynamicFunction>(this->definition);
 
-                shared_ptr<Interpreter::Context> executionContext = context->createChild("EXECUTION", functionDefinition.implementation[0].sequence[0].sequence.set[0].line, functionDefinition.implementation[0].sequence[0].sequence.set[0].pos);
+                shared_ptr<Interpreter::Context> executionContext = functionDefinition.declarationContext->createChild("EXECUTION", functionDefinition.implementation[0].sequence[0].sequence.set[0].line, functionDefinition.implementation[0].sequence[0].sequence.set[0].pos);
 
                 executionContext->overwriteVariable("this", this->boundRef);
 
@@ -79,7 +82,11 @@ namespace Platinum
             } else {
                 DynamicFunction functionDefinition = get<DynamicFunction>(this->definition);
 
-                shared_ptr<Interpreter::Context> executionContext = context->createChild("EXECUTION", functionDefinition.implementation[0].sequence[0].sequence.set[0].line, functionDefinition.implementation[0].sequence[0].sequence.set[0].pos);
+                if(functionDefinition.implementation.size() == 0){
+                    return makeValue();
+                };
+
+                shared_ptr<Interpreter::Context> executionContext = functionDefinition.declarationContext->createChild("EXECUTION", functionDefinition.implementation[0].sequence[0].sequence.set[0].line, functionDefinition.implementation[0].sequence[0].sequence.set[0].pos);
 
                 executionContext->overwriteVariable("this", this->boundRef);
 
@@ -96,7 +103,7 @@ namespace Platinum
 
         string Function::toString()
         {
-            return this->isNativeFunction() ? "{ Native Function }" : "{ Dynamic Function }";
+            return this->isNativeFunction() ? "{{ Native Function }}" : "{{ Dynamic Function }}";
         };
 
         Prototype::Prototype()
