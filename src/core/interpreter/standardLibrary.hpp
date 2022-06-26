@@ -16,8 +16,6 @@ namespace Platinum
         Data::Value io();
         Data::Value math();
         Data::Value fs();
-        Data::Value network();
-        Data::Value eval();
     };
 
     namespace Interpreter

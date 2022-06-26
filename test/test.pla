@@ -1,5 +1,3 @@
 io = importLibrary("io");
-
-importModule("test/factorial.pla");
-
-io.log(factorial(5));
+types = importLibrary("types");
+math = importLibrary("math");

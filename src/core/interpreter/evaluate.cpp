@@ -414,6 +414,11 @@ namespace Platinum
         Data::Value evaluateCall(shared_ptr<Context> context, Data::Value function, AST::TrackedCode argsLiteral)
         {
             AST::TrackedCode argsLiteralInternals = argsLiteral.slice(1, argsLiteral.set.size() - 1);
+
+            if(trimFront(argsLiteralInternals).set.size() == 0){
+                return function->call(context, vector<Data::Value>());
+            };
+
             AST::ParsedCode argsLiteralBlocks = AST::Parser::createEvaluationBlocks(context, argsLiteralInternals);
 
             vector<Data::Value> args;

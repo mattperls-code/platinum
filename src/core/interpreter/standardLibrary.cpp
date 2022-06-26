@@ -28,10 +28,6 @@ namespace Platinum
                     return Modules::math();
                 } else if(moduleName == "fs"){
                     return Modules::fs();
-                } else if(moduleName == "network"){
-                    return Modules::network();
-                } else if(moduleName == "eval"){
-                    return Modules::eval();
                 };
 
                 context->throwError(Context::ErrorTypes::CONTEXTUAL, "Invalid module name");

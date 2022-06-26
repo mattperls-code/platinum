@@ -74,7 +74,7 @@ namespace Platinum
             }));
 
             this->implicitToString = Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
-                return makeValue("\"" + boundRef->getPrimitiveString(context) + "\"");
+                return makeValue(boundRef->getPrimitiveString(context));
             }));
 
             this->members["length"] = makeValue(Function(ref, NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Value> args, Value boundRef) -> Value {
