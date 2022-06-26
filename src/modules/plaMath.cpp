@@ -143,7 +143,7 @@ namespace Platinum
 
             components["power"] = Data::makeValue(Data::Function(Data::makeValue(), Data::NativeFunction([](shared_ptr<Interpreter::Context> context, vector<Data::Value> args, Data::Value boundRef) -> Data::Value {
                 if(args.size() != 2){
-                    context->throwError(Interpreter::Context::ErrorTypes::CONTEXTUAL, "Expected exactly 1 arg");
+                    context->throwError(Interpreter::Context::ErrorTypes::CONTEXTUAL, "Expected exactly 2 arg");
                 };
                 return Data::makeValue(powf(args[0]->getPrimitiveNumber(context), args[1]->getPrimitiveNumber(context)));
             })));

@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 
 #include "standardLibrary.hpp"
 #include "context.hpp"
@@ -38,6 +39,8 @@ namespace Platinum
                     context->throwError(Context::ErrorTypes::CONTEXTUAL, "Expected exactly 1 arg. (path: string)");
                 };
 
+                filesystem::path initialPath = filesystem::current_path();
+
                 string path = args[0]->getPrimitiveString(context);
                 ifstream runTarget(path);
                 if(runTarget.fail()){
@@ -51,9 +54,18 @@ namespace Platinum
                 };
                 runTarget.close();
 
-                executeOnContext(context, AST::TrackedCode(untrackedCode));
+                string dir = path.substr(0, path.find_last_of("/"));
+                if(path.find("/") == string::npos){
+                    dir = "./";
+                } else if(dir[0] == '/'){
+                    context->throwError(Context::ErrorTypes::FILE, "File \"" + path + "\" was unable to be read");
+                };
+                filesystem::current_path(filesystem::path(dir));
 
+                executeOnContext(context, AST::TrackedCode(untrackedCode));
                 context->merge();
+
+                filesystem::current_path(initialPath);
 
                 return Data::makeValue();
             })));

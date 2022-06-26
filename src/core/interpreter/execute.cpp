@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include <iomanip>
 
 #include "evaluate.hpp"
@@ -21,6 +22,8 @@ namespace Platinum
 
         void executeFile(string path, shared_ptr<Context> context)
         {
+            filesystem::path initialPath = filesystem::current_path();
+
             ifstream runTarget(path);
             if(runTarget.fail()){
                 context->throwError(Context::ErrorTypes::FILE, "File \"" + path + "\" was unable to be read");
@@ -32,7 +35,18 @@ namespace Platinum
                 untrackedCode += line + '\n';
             };
             runTarget.close();
+
+            string dir = path.substr(0, path.find_last_of("/"));
+            if(path.find("/") == string::npos){
+                dir = "./";
+            } else if(dir[0] == '/'){
+                context->throwError(Context::ErrorTypes::FILE, "File \"" + path + "\" was unable to be read");
+            };
+            filesystem::current_path(filesystem::path(dir));
+            
             executeOnContext(context, AST::TrackedCode(untrackedCode));
+            
+            filesystem::current_path(initialPath);
 
             cout << "\033[36m" << "Execution Time: " << fixed << setprecision(8) << context->getExecutionTime() << " seconds" << endl;
         };

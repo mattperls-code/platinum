@@ -1,3 +1,6 @@
 io = importLibrary("io");
 types = importLibrary("types");
 math = importLibrary("math");
+fs = importLibrary("fs");
+
+io.log(io, types, math, fs);
